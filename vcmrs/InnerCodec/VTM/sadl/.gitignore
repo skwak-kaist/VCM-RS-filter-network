@@ -1,0 +1,11 @@
+*.pyc
+*/CMakeLists.txt.user
+*.sadl
+*.results
+*.aux
+*.bbl
+*.blg
+*.out
+*/build
+.idea/
+cmake-build-*/

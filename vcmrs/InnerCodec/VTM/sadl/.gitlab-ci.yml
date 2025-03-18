@@ -1,0 +1,63 @@
+stages:
+   - build
+variables:
+      GIT_SUBMODULE_STRATEGY: none
+
+.build_template_windows:
+   stage: build
+   script:
+      - |
+        echo "[INFO] BUILD $CI_COMMIT_SHORT_SHA";
+        mkdir -p build;
+        cd build;
+        & "C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release -DSPARSE_MATMULT_SUPPORT=1 ../sample; 
+        & "C:\Program Files\CMake\bin\cmake.exe" --build ./;     
+   only:
+      refs:
+         - master
+         - dev_for_transformers
+         - merge_requests
+      variables:
+         - $CI_PROJECT_URL == 'https://vcgit.hhi.fraunhofer.de/jvet-ahg-nnvc/sadl'
+         - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'master'
+         
+
+.build_template_linux:
+   stage: build
+   script:
+      - |
+        echo "[INFO] BUILD $CI_COMMIT_SHORT_SHA";
+        mkdir -p build;
+        cd build;
+        cmake  -DCMAKE_BUILD_TYPE=Release -DSPARSE_MATMULT_SUPPORT=1 ../sample; 
+        make;
+        cd ..;
+        mkdir -p utests/build;
+        cd utests/build;
+        cmake  -DCMAKE_BUILD_TYPE=Release -DSPARSE_MATMULT_SUPPORT=1 ..; 
+        make;      
+   only:
+      refs:
+         - master
+         - dev_for_transformers
+         - merge_requests
+      variables:
+         - $CI_PROJECT_URL == 'https://vcgit.hhi.fraunhofer.de/jvet-ahg-nnvc/sadl'
+         - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'master'
+ 
+
+build_ubuntu2004:
+   extends: .build_template_linux
+   tags:
+      - ubuntu2004
+
+build_ubuntu2204:
+   extends: .build_template_linux
+   tags:
+      - ubuntu2204
+
+build_vc192x:
+   extends: .build_template_windows
+   tags:
+      - vc192x
+

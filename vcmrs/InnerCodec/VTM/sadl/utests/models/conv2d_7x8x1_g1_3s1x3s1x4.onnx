@@ -1,0 +1,40 @@
+pytorch2.0.1:î
+õ
+input
+conv.weight2
+/conv/Conv"Conv*
+	dilations@@ *
+group *
+kernel_shape@@ *
+pads@@@@ *
+strides@@ 2ë
+/usr/local/lib/python3.10/dist-packages/torch/nn/modules/conv.py(459): _conv_forward
+/usr/local/lib/python3.10/dist-packages/torch/nn/modules/conv.py(463): forward
+/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py(1488): _slow_forward
+/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py(1501): _call_impl
+/home/galpinf/work/test/sadl/./conv2d_7x8x1_g1_3s1x3s1x4.py(18): forward
+/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py(1488): _slow_forward
+/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py(1501): _call_impl
+/usr/local/lib/python3.10/dist-packages/torch/jit/_trace.py(118): wrapper
+/usr/local/lib/python3.10/dist-packages/torch/jit/_trace.py(127): forward
+/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py(1501): _call_impl
+/usr/local/lib/python3.10/dist-packages/torch/jit/_trace.py(1268): _get_trace_graph
+/usr/local/lib/python3.10/dist-packages/torch/onnx/utils.py(893): _trace_and_get_graph_from_model
+/usr/local/lib/python3.10/dist-packages/torch/onnx/utils.py(989): _create_jit_graph
+/usr/local/lib/python3.10/dist-packages/torch/onnx/utils.py(1113): _model_to_graph
+/usr/local/lib/python3.10/dist-packages/torch/onnx/utils.py(1548): _export
+/usr/local/lib/python3.10/dist-packages/torch/onnx/utils.py(506): export
+/home/galpinf/work/test/sadl/./conv2d_7x8x1_g1_3s1x3s1x4.py(38): <module>
+	torch_jit*ªBconv.weightJŠƒ½æ³½nv¸¾sÔw>ª>¹‡‘¾hQ;¾Ÿz7>»†±»Ç2¢¾c¶>P+¶½­>“€¾bÞ–¼ŠÙ½âJ=6ÃÒ=·*æ¼ˆ¿ˆ¾$Àí½ÖÞ—¾f	y>Æ…½_ &>Ä¾ÑóE¾·Tˆ¾áä >àÒ=yw[>8ž=šz>¿­<Bd;¾ÈÔ½Z
+input
+
+
+
+
+b
+2
+
+
+
+
+B
