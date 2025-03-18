@@ -4,10 +4,10 @@ import vcmrs
 CKPT_DIR = Path(vcmrs.__file__).parent / 'JointFilter/checkpoints'
 
 
-def post_lic_multiQ(qp):
+def rgb_post_lic_multi_quality(qp):
     return CKPT_DIR / 'rgb_post_lic_multi_quality' / 'resnext101'
 
-def post_vtm_finetune(qp):
+def rgb_post_vtm_multi_qp_finetuned(qp):
     return CKPT_DIR / 'rgb_post_vtm_multi_qp_finetuned' / 'resnext101'
 
 def yuv_pre(qp):
