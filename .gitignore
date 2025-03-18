@@ -43,3 +43,5 @@ Data
 vcmrs/output
 Scripts/coding_log
 vcmrs/InnerCodec/NNManager/NNIntraCodec/LIC/e2evc/packages/
+Scripts/output
+Scripts/VTM_InnerCodec/output
