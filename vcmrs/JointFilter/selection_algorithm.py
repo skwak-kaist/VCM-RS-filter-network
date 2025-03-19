@@ -3,6 +3,8 @@ import vcmrs
 
 CKPT_DIR = Path(vcmrs.__file__).parent / 'JointFilter/checkpoints'
 
+def joint_vtm(qp):
+    return CKPT_DIR / 'joint_vtm' 
 
 def rgb_post_lic_multi_quality(qp):
     return CKPT_DIR / 'rgb_post_lic_multi_quality' / 'resnext101'
