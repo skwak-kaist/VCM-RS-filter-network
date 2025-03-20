@@ -132,10 +132,13 @@ cfg['BitTruncationRestorationHeightThreshold'] = int(sys.argv[11])
 scenario_ini_file = os.path.join( os.path.dirname(os.path.dirname(os.path.abspath(__file__))), f"{scenario}.ini" )
 utils.update_cfg_from_ini( scenario_ini_file, cfg)
 
-roi_descriptor, spatial_descriptor = utils.get_descriptor_files(data_dir, scenario, cfg, 'TVD', video_id)
+#roi_descriptor, spatial_descriptor = utils.get_descriptor_files(data_dir, scenario, cfg, 'TVD', video_id)
+#roi_descriptor, spatial_descriptor = utils.get_descriptor_files(data_dir, scenario, cfg, 'SFU', fname)
+#cfg["RoIDescriptor"] = roi_descriptor
+#cfg["SpatialDescriptor"] = spatial_descriptor
 
-cfg["RoIDescriptor"] = roi_descriptor
-cfg["SpatialDescriptor"] = spatial_descriptor
+utils.set_descriptor_files(data_dir, scenario, cfg, 'TVD', video_id)
+
 
 for i in range(3, len(sys.argv)):
   if sys.argv[i].startswith("--"):
