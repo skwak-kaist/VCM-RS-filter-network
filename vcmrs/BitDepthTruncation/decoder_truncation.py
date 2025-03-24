@@ -35,7 +35,8 @@ class truncation(Component):
       
       makedirs(os.path.dirname(output_fname))
         
-      if item._is_yuv_video:
+      #if item._is_yuv_video:
+      if (item._is_yuv_video) and (item.args.JointFilterPostModel == 'Identity'):
         vcmrs.log("==========================================================decoder truncation process start!==================================================================================")
         vcmrs.log(f"bit_depth_shift_flag is: {bit_depth_shift_flag}")
         vcmrs.log(f"bit_depth_shift_luma is: {bit_depth_shift_luma}")
@@ -121,6 +122,7 @@ class truncation(Component):
         output_file.close()
         vcmrs.log("================================= complete truncation =================================")
       else:
+        vcmrs.log("================================= Bit depth shift is skipped (Post-filter) =================================")
         enforce_symlink(input_fname, output_fname)
       
   def _get_parameter(self, item):
