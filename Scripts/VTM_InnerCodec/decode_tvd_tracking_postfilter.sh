@@ -2,12 +2,21 @@
 
 # Decode TVD tracking bitstreams
 
+eval "$(conda shell.bash hook)"
+
+env_name=$(head -n 1 ../../vcm_env_name.txt | xargs)
+echo $env_name
+conda activate $env_name
+
+
+
 set -ex
 
 #test_id='TVD_tracking'
 test_id=$1
 filter_mode=$2
 decode_folder=$3
+cuda_device=$4
 base_folder="output"
 input_dir="$base_folder/$test_id/bitstream"
 output_dir="$base_folder/${decode_folder}/$test_id/recon"
@@ -25,7 +34,7 @@ for video_id in $video_ids; do
     bs_fname=$input_dir/${video_id}_${qp}.bin
     echo processing $bs_fname ...
     if test -f "$bs_fname"; then
-      python -m vcmrs.decoder \
+      CUDA_VISIBLE_DEVICES=$cuda_device python -m vcmrs.decoder \
         --InnerCodec VTM \
         --working_dir "$base_folder/dec_temp/$test_id" \
         --output_dir $output_dir/$qp \

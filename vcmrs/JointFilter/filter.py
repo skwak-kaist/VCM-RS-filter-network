@@ -39,8 +39,8 @@ class filter(Component):
             item.args.InputBitDepth = 10
             post_flag = item.args.JointFilterPostModel != 'Identity'
             if post_flag:
-                #post_flag = self._hijack_bdt_flag(item)
-                post_flag = True # 일단 무조건 켜는 방안으로 hard coding
+                post_flag = self._hijack_bdt_flag(item) # hijack BitDepthTruncation flag
+                #post_flag = True # 일단 무조건 켜는 방안으로 hard coding
             height, width, _ = item.video_info.resolution
             if not post_flag:
                 vcmrs.log(f"[Joint Filter] Post filter off")

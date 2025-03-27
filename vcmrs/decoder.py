@@ -153,8 +153,8 @@ def decode(args):
 
   
   post_components = []
-  post_components += ['JointFilter'] # joint filter 추가
   post_components += ['SpatialResample']
+  post_components += ['JointFilter'] # joint filter 추가
   post_components += ['ROI']
   post_components += ['Colorize']
   post_components += ['TemporalResample']

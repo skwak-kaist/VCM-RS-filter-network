@@ -2,10 +2,20 @@
 
 # Decode SFU bitstreams
 
+eval "$(conda shell.bash hook)"
+
+env_name=$(head -n 1 ../../vcm_env_name.txt | xargs)
+echo $env_name
+conda activate $env_name
+
+
+
 set -ex
 #test_id='SFU'
 
 test_id=$1
+decode_folder=$2
+
 base_folder="output"
 input_dir="$base_folder/$test_id/bitstream"
 output_dir="$base_folder/decode/$test_id/recon"

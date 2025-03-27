@@ -80,7 +80,7 @@ class GPUPool:
     ret = p.map(partial(foo, self.dev_dict, self.lock), tasks)
     return ret
 
-def collect_coding_times(log_files, time_type="encoding", seq_order_list=None, in_hours=True, file_regx="encoding_(.*?)_(qp\d+).*"):
+def collect_coding_times(log_files, time_type="encoding", seq_order_list=None, in_hours=False, file_regx="encoding_(.*?)_(qp\d+).*"):
   log_dir = os.path.dirname(log_files[0])
   
   #regular encoding time and decoding time collection

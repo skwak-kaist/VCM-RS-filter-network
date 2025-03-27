@@ -15,6 +15,8 @@ time_type=sys.argv[2] # "encoding" or "decoding"
 
 image_dataset=False
 logfiles = glob.glob(os.path.join(log_dir,"*.log"))
+#print(log_dir)
+#print(logfiles)
 
 if image_dataset:
    times = utils.collect_coding_times(logfiles, time_type=time_type, file_regx="(.*?)(qp\d+).*")
