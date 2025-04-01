@@ -82,6 +82,9 @@ def get_arguments():
   parser.add_argument('--JointFilterPostDomain', type=str, default='RGB', choices=['RGB', 'YUV'])
   parser.add_argument('--JointFilterPatchSize', type=int, default=256)
   parser.add_argument('--JointFilterSelectionAlgorithm', type=str, default='algo1')
+  parser.add_argument('--post_filtering_enable_flag', type=int, default=0, help='1 for turning on the post filtering and 0 for turning off')
+  parser.add_argument('--Colorize_pre_luma_shift', type=int, default=1, help='1 for turning on the pre-luma shift and 0 for turning off')
+  parser.add_argument('--Joint_filter_cuda', type=int, default=1) 
   
   # internal configurations
   parser.add_argument('--working_dir', type=str, default=None,
@@ -99,10 +102,11 @@ def get_arguments():
   parser.add_argument('--ffmpeg', type=str, default='ffmpeg',
                       help='Path to ffmpeg executable')
 
+  parser.add_argument('--module-wise-time', type=bool, default=True)
+
   args = parser.parse_args()
 
   return args
-
 
 
 def initialize(args):
@@ -150,7 +154,6 @@ def decode(args):
   s_time = time.time()
   decoder_nnvvc.process(ctx.input_files, ctx)
   vcmrs.log(f"[{os.path.basename(item.args.working_dir)}] Inner decoding done. Time = {(time.time() - s_time):.6}(s)")
-
   
   post_components = []
   post_components += ['JointFilter'] # joint filter 추가
@@ -165,10 +168,13 @@ def decode(args):
   for item in ctx.input_files:
     vcmrs.log(f'Post-inner processing file: {item.fname}')
     
-    item.FrameRateRelativeVsInnerCodec = 1.0
-
+    item.FrameRateRelativeVsInnerCodec = 1.0       
+    
     in_fname = item.inner_out_fname
     for c_name in post_components:
+      
+      component_start_time = time.time()
+      
       component_method = getattr(ctx.input_args, c_name)
       component = component_utils.load_component(c_name, "decoder", component_method, ctx)
       #out_fname = item.get_stage_output_fname_decoding(f"post_{c_name}")
@@ -176,9 +182,13 @@ def decode(args):
       component.process(os.path.abspath(in_fname), os.path.abspath(out_fname), item, ctx)
       in_fname = out_fname
       component = None # free memory after each iteration
-   
+      
+      component_end_time = time.time()
+      component_duration = component_end_time - component_start_time
+      vcmrs.log(f"[{c_name} at decoder done]. ModuleTime = {component_duration:.6}(s)") #component coding time      
+    
     # generate ouptut recon
-    io_utils.gen_output_recon(in_fname, item)
+    io_utils.gen_output_recon(in_fname, item) 
 
 
 def main():

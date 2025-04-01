@@ -73,7 +73,15 @@ class truncation(Component):
         
         bit_depth_shift_luma = 1 # always applied, so always signalled, as per adopted m71663 (bit depth shift cleanup).
         bit_depth_shift_chroma = 0
-        bit_depth_luma_enhance = 1 if item.args.BitTruncationLumaEnhancement and bit_depth_shift_luma and not bit_depth_shift_flag else 0
+        bit_depth_luma_enhance = 1 if item.args.BitTruncationL
+
+        # # post filtering flag assignment # s.kwak
+        # if (item.args.OriginalSourceHeight < item.args.BitTruncationRestorationHeightThreshold and item.args.OriginalSourceWidth < item.args.BitTruncationRestorationWidthThreshold) # resolution condition
+        # and (bit_depth_shift_flag==1) and (bit_depth_shift_luma==1):
+        #   post_filtering_enable_flag = 1
+        # else:
+        #   post_filtering_enable_flag = 0 
+        # 나중에 하자.       
 
         self._set_parameter(item, bit_depth_shift_flag, bit_depth_shift_luma, bit_depth_shift_chroma, bit_depth_luma_enhance)
         vcmrs.log("================================= complete truncation =================================")
@@ -85,12 +93,13 @@ class truncation(Component):
 
   def _set_parameter(self, item, bit_depth_shift_flag, bit_depth_shift_luma = 0, bit_depth_shift_chroma = 0, bit_depth_luma_enhance=0):
     # sequence level parameter
-    #default scale: 1 byte, framestoberestore: 2 bytes
+    # default scale: 1 byte, framestoberestore: 2 bytes
     param_data = bytearray(4)
     param_data[0] = bit_depth_shift_flag
     param_data[1] = bit_depth_shift_luma
     param_data[2] = bit_depth_shift_chroma
     param_data[3] = bit_depth_luma_enhance
+    # param_data[4] = post_filtering_enable_flag # 
     item.add_parameter('BitDepthTruncation', param_data=param_data)
     pass
 

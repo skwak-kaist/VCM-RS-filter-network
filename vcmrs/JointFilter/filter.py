@@ -37,16 +37,26 @@ class filter(Component):
         elif self.mode == 'post':
             is_yuv = item.args.JointFilterPostDomain == 'YUV'
             item.args.InputBitDepth = 10
-            post_flag = item.args.JointFilterPostModel != 'Identity'
+            post_flag = item.args.JointFilterPostModel != 'Identity'         
+
             if post_flag:
-                post_flag = self._hijack_bdt_flag(item) # hijack BitDepthTruncation flag
-                #post_flag = True # 일단 무조건 켜는 방안으로 hard coding
+                #post_flag = self._hijack_bdt_flag(item) # hijack BitDepthTruncation flag
+                # modification by s.kwak
+                param_data = item.parameters['BitDepthTruncation'] # access to BitDepthTruncation parameter
+                param_data_bytearray = bytearray(param_data) # convert to bytearray
+                
+                bit_depth_shift_enabled_flag = param_data_bytearray[0] # get bit_depth_shift_flag
+                bit_depth_left_shift_luma = param_data_bytearray[1] # get bit_depth_shift_luma
+                                
+                post_flag = (bit_depth_shift_enabled_flag==1) and (bit_depth_left_shift_luma==1) # bit_depth_shift_enabled_flag is only turned on when the original source HxW < 1920x10             
+                item.args.post_filtering_enable_flag = post_flag # assign flag
+                
             height, width, _ = item.video_info.resolution
             if not post_flag:
                 vcmrs.log(f"[Joint Filter] Post filter off")
                 self.process_identity(input_fname, output_fname, item, ctx)
                 return
-            vcmrs.log(f"[Joint Filter] Post filter on")
+            vcmrs.log(f"[Joint Filter] post filtering enable flag is {item.args.post_filtering_enable_flag} Post filter on")
             net = globals()[item.args.JointFilterPostModel]()
         else:
             raise ValueError(f"Invalid mode: {self.mode}")
@@ -57,9 +67,10 @@ class filter(Component):
         except AttributeError:
             ckpt_path = ckpt_selection(None) / f"{self.mode}filter.pth"
 
-        fn = get_filter_fn(net, ckpt_path, patch_size=item.args.JointFilterPatchSize)
+        #fn = get_filter_fn(net, ckpt_path, patch_size=item.args.JointFilterPatchSize)
+        fn = get_filter_fn(net, ckpt_path, patch_size=item.args.JointFilterPatchSize, use_cuda=item.args.Joint_filter_cuda)
         vcmrs.log(f"================= {self.mode}-filtering with chekpoint on {ckpt_path} ====================")
-
+        vcmrs.log(f"================= {self.mode}-filtering process uses cuda {item.args.Joint_filter_cuda} ====================")
         if item._is_dir_video:
             # video data in a directory
             fnames = sorted(glob.glob(os.path.join(input_fname, '*.png')))
@@ -283,7 +294,7 @@ class FilterV8(nn.Module):
         return self.sigmoid(x_unet + x_conv_1x1)
 
 
-def get_filter_fn(net, checkpoint_path, patch_size=-1, use_cuda=True, decoding_time=False):
+def get_filter_fn(net, checkpoint_path, patch_size=-1, use_cuda=True, decoding_time=False): #s.kwak temporal change: use_cuda
     if checkpoint_path:
         net.load_state_dict(torch.load(checkpoint_path, map_location='cpu'))
     net = net.cuda() if use_cuda else net

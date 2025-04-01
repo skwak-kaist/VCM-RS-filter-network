@@ -14,6 +14,9 @@ output_dir="$base_folder/${decode_folder}/$test_id/recon"
 log_dir="$base_folder/${decode_folder}/$test_id/decoding_log"
 tmp_dir="$base_folder/temp/$test_id"
 
+
+
+
 mkdir -p $output_dir
 
 echo 
@@ -40,6 +43,8 @@ for fname in $input_dir/*; do
       --logfile $log_dir/"${video_fname}_${qp}.log" \
       --JointFilterPostModel 'FilterV8' \
       --JointFilterSelectionAlgorithm ${filter_mode} \
+      --Colorize_pre_luma_shift 0 \
+      --Joint_filter_cuda 1 \
       $bs_fname
   done
 done

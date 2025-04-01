@@ -56,7 +56,8 @@ class colorize(Component):
       decisions = []
       for i in range(len(self.colorization_decisions)*self.colorization_period):
         idd = i//self.colorization_period # intra period idx
-        shifts.append( self.luma_pre_shifts[idd] )
+
+        shifts.append( self.luma_pre_shifts[idd])
         decisions.append( self.colorization_decisions[idd] )
 
       self.colorizers.process_video_yuv(-1, input_fname, output_fname, W, H, item.args.InputChromaFormat, item.args.InputBitDepth, shifts, decisions)
@@ -75,7 +76,13 @@ class colorize(Component):
   def _get_parameter(self, item):
     # usa luma shift from BitDepthTruncation, as allowed per adopted  m71663 (bit depth shift cleanup).
     bit_depth_shift_flag, bit_depth_shift_luma, bit_depth_shift_chroma, bit_depth_luma_enhance = bit_depth_trunation_get_parameter(item)
-    lps = bit_depth_shift_luma
+    
+    if item.args.Colorize_pre_luma_shift:
+      vcmrs.log(f"VCMRS Colorizer pre-luma shift is applied, Colorize_pre_luma_shift: {item.args.Colorize_pre_luma_shift}")
+      lps = bit_depth_shift_luma
+    else:
+      vcmrs.log(f"VCMRS Colorizer pre-luma shift is skipped, Colorize_pre_luma_shift: {item.args.Colorize_pre_luma_shift}")
+      lps = 0
     
     self.colorization_decisions = None
     self.luma_pre_shifts = None

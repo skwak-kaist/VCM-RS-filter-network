@@ -9,7 +9,6 @@ echo $env_name
 conda activate $env_name
 
 
-
 set -ex
 #test_id='SFU'
 
@@ -18,8 +17,8 @@ decode_folder=$2
 
 base_folder="output"
 input_dir="$base_folder/$test_id/bitstream"
-output_dir="$base_folder/decode/$test_id/recon"
-log_dir="$base_folder/decode/$test_id/decoding_log"
+output_dir="$base_folder/${decode_folder}/$test_id/recon"
+log_dir="$base_folder/${decode_folder}/$test_id/decoding_log"
 tmp_dir="$base_folder/temp/$test_id"
 
 mkdir -p $output_dir

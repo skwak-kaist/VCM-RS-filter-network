@@ -79,9 +79,10 @@ class truncation(Component):
           u = np.frombuffer(input_file.read(uv_size * bytes_per_pixel), dtype=dtype).reshape(uv_shape)
           v = np.frombuffer(input_file.read(uv_size * bytes_per_pixel), dtype=dtype).reshape(uv_shape)
 
-          if bit_depth_shift_flag: 
-            
+          #if bit_depth_shift_flag: 
+          if (bit_depth_shift_flag) and (item.args.post_filtering_enable_flag==0): # modified (s.kwak)
             if bit_depth_shift_luma:
+              vcmrs.log(f"bit_depth_shift_luma is applied: {bit_depth_shift_luma}")
               y = y.copy()
               # right shift 1
               y = np.left_shift(y, bit_depth_shift_luma) 
@@ -107,7 +108,7 @@ class truncation(Component):
               output_file.write(v.tobytes())
         
           else:
-              
+              vcmrs.log("================================= Bit depth shift is skipped (Post-filter is applied) =================================")
               if bit_depth_luma_enhance:
                 y = y.copy()
                 y = self.apply_clahe(y, input_bit_depth, dtype_depth, dtype)
